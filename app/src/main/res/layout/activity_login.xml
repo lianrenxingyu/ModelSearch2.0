@@ -39,16 +39,18 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/password"
         android:layout_marginTop="30dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/lightBlue"
         android:text="登录" />
 
     <TextView
+        android:id="@+id/tv_register"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="30dp"
-        android:text="@string/register" />
+        android:text="@string/register"
+        android:textColor="@color/Blue" />
 
 
 </RelativeLayout>
