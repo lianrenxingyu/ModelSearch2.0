@@ -13,7 +13,7 @@ import com.chenggong.modelsearch.R;
 
 public class SplashActivity extends Activity {
 
-    private static final int ANIMATION_DURATION = 2000;
+    private static final int ANIMATION_DURATION = 1300;
 
     private ImageView splashImage;
     @Override
