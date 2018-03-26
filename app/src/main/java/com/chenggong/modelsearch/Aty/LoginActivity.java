@@ -35,7 +35,6 @@ public class LoginActivity extends Activity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.tv_register:
                 RegisterActivity.start(LoginActivity.this);
-                LoginActivity.this.finish();
                 break;
             case R.id.btn_login:
                 // TODO  登录操作
