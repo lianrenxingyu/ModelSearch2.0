@@ -1,17 +1,16 @@
 package com.chenggong.modelsearch.Aty;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.chenggong.modelsearch.R;
 
-public class RegisterActivity extends Activity {
+public class RegisterActivity extends AppCompatActivity {
 
     private Button btn_register;
     private EditText et_userName, et_first_pwd, et_second_pwd, et_email, et_company;
