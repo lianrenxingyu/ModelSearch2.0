@@ -28,7 +28,9 @@ public class TextSearchActivity extends Activity {
         btn_textSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 //TODO 实现搜索功能
+                ResultActivity.start(TextSearchActivity.this);
             }
         });
 

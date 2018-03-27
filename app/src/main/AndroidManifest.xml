@@ -19,7 +19,8 @@
         </activity>
         <activity android:name=".Aty.LoginActivity" />
         <activity android:name=".Aty.RegisterActivity" />
-        <activity android:name=".Aty.TextSearchActivity"></activity>
+        <activity android:name=".Aty.TextSearchActivity" />
+        <activity android:name=".Aty.ResultActivity"></activity>
     </application>
 
 </manifest>
