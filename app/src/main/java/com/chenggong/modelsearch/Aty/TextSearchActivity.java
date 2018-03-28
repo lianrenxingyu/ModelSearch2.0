@@ -4,8 +4,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.hardware.input.InputManager;
+import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.EventLogTags;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -13,8 +15,10 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.chenggong.modelsearch.R;
+import com.chenggong.modelsearch.Utils.Logger;
 
 public class TextSearchActivity extends Activity {
+    private static final String TAG = "TextSearchActivity";
 
     private Button btn_textSearch;
     private EditText et_textSearch;
@@ -45,6 +49,7 @@ public class TextSearchActivity extends Activity {
             if (!isOpen) {  //通过判断输入法弹出状态，如果关闭，则弹出输入法
                 methodManager.showSoftInput(et_textSearch,InputMethodManager.SHOW_FORCED);
             }
+            Logger.d(TAG,"执行");
         } else if (!hasFocus) {
             methodManager.hideSoftInputFromWindow(et_textSearch.getWindowToken(), 0);
         }
