@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch.Adapter;
+package com.chenggong.modelsearch.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.chenggong.modelsearch.Bean.Result;
+import com.chenggong.modelsearch.bean.Result;
 import com.chenggong.modelsearch.R;
 
 import java.util.List;

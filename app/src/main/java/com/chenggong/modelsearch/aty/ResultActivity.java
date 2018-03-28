@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch.Aty;
+package com.chenggong.modelsearch.aty;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
-import com.chenggong.modelsearch.Adapter.ResultAdapter;
-import com.chenggong.modelsearch.Bean.Result;
+import com.chenggong.modelsearch.adapter.ResultAdapter;
+import com.chenggong.modelsearch.bean.Result;
 import com.chenggong.modelsearch.R;
 
 import java.util.ArrayList;

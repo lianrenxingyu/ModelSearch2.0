@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch.Aty;
+package com.chenggong.modelsearch.aty;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;

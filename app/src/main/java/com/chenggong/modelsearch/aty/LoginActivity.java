@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch.Aty;
+package com.chenggong.modelsearch.aty;
 
 import android.content.Context;
 import android.content.Intent;

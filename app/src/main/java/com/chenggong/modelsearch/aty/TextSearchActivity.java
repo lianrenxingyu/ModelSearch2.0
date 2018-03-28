@@ -1,21 +1,16 @@
-package com.chenggong.modelsearch.Aty;
+package com.chenggong.modelsearch.aty;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.hardware.input.InputManager;
-import android.nfc.Tag;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.EventLogTags;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.chenggong.modelsearch.R;
-import com.chenggong.modelsearch.Utils.Logger;
+import com.chenggong.modelsearch.utils.Logger;
 
 public class TextSearchActivity extends Activity {
     private static final String TAG = "TextSearchActivity";

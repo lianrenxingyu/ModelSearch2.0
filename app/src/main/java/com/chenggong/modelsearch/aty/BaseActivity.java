@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch.Aty;
+package com.chenggong.modelsearch.aty;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;

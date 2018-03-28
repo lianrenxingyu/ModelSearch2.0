@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch.Utils;
+package com.chenggong.modelsearch.utils;
 
 
 import android.util.Log;
