@@ -55,7 +55,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.et_textSearch:
-                TextSearchActivity.start(MainActivity.this);
+                ResultActivity.start(MainActivity.this);
                 break;
             case R.id.iv_gallery:
                 //TODO 打开图库的操作

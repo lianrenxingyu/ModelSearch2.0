@@ -6,16 +6,35 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.chenggong.modelsearch.adapter.ResultAdapter;
 import com.chenggong.modelsearch.bean.Result;
 import com.chenggong.modelsearch.R;
+import com.chenggong.modelsearch.bean.SearchReqBean;
+import com.chenggong.modelsearch.net.HttpUtil;
+import com.chenggong.modelsearch.utils.Configure;
+import com.chenggong.modelsearch.utils.Logger;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ResultActivity extends Activity {
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
+
+public class ResultActivity extends Activity implements View.OnClickListener {
+
+    private static final String TAG = "ResultActivity";
+    private Button btn_textSearch;
+    private EditText et_textSearch;
     private RecyclerView mRecyclerView;
     private List<Result> resultList;
 
@@ -23,6 +42,9 @@ public class ResultActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
+        btn_textSearch = findViewById(R.id.btn_textSearch);
+        et_textSearch = findViewById(R.id.et_textSearch);
+        btn_textSearch.setOnClickListener(this);
 
         //初始化数据
         initData();
@@ -33,6 +55,21 @@ public class ResultActivity extends Activity {
         ResultAdapter resultAdapter = new ResultAdapter(resultList);
         mRecyclerView.setAdapter(resultAdapter);
 
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        InputMethodManager methodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (hasFocus) {
+            methodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+            boolean isOpen = methodManager.isActive();
+            if (!isOpen) {  //通过判断输入法弹出状态，如果关闭，则弹出输入法
+                methodManager.showSoftInput(et_textSearch, InputMethodManager.SHOW_FORCED);
+            }
+            Logger.d(TAG, "执行");
+        } else if (!hasFocus) {
+            methodManager.hideSoftInputFromWindow(et_textSearch.getWindowToken(), 0);
+        }
     }
 
 
@@ -46,12 +83,44 @@ public class ResultActivity extends Activity {
         result.setName("水壶");
         result.setWebpageURL("baidu.com/shuihu/101aaaaaaaaaaa");
         resultList = new ArrayList<>();
-        for(int i = 0;i<10;i++){
+        for (int i = 0; i < 10; i++) {
             resultList.add(result);
         }
     }
-    public static void start(Context context){
+
+    public static void start(Context context) {
         Intent intent = new Intent(context, ResultActivity.class);
         context.startActivity(intent);
     }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_textSearch:
+                SearchReqBean reqBean = new SearchReqBean(Configure.NAME_TYPE, et_textSearch.getText().toString());
+                String jsonStr = JSON.toJSONString(reqBean);
+                Logger.d(TAG, jsonStr);
+                HttpUtil.sendOkHttpRequest(Configure.NAME_UPLOAD_URL, jsonStr, new Callback() {
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(ResultActivity.this, "出现错误", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+                        Logger.d(TAG, "响应出现错误");
+                    }
+
+                    @Override
+                    public void onResponse(Call call, Response response) throws IOException {
+                        String responseStr = response.body().string();
+                        Logger.d(TAG, responseStr);
+                    }
+                });
+                // TODO 完成搜索功能
+                break;
+        }
+    }
+
 }

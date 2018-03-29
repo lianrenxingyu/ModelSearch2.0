@@ -1,5 +1,7 @@
 package com.chenggong.modelsearch.adapter;
 
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.widget.TextView;
 
 import com.chenggong.modelsearch.bean.Result;
 import com.chenggong.modelsearch.R;
+import com.chenggong.modelsearch.utils.Logger;
 
 import java.util.List;
 
@@ -19,9 +22,14 @@ import java.util.List;
 
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder> {
 
-    private List<Result> mResultList;
+    private static final String TAG = "ResultAdapter";
+    private List<Result> resultList;
 
+    /**
+     * ViewHolder 内部类
+     */
     static class ViewHolder extends RecyclerView.ViewHolder {
+        View view;
         TextView tv_title;  //暂时为搜索物品+作者
         ImageView model_image;
         TextView tv_timePost;
@@ -30,6 +38,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
         public ViewHolder(View itemView) {
             super(itemView);
+            view = itemView;
             tv_title = itemView.findViewById(R.id.tv_title);
             model_image = itemView.findViewById(R.id.model_image);
             tv_timePost = itemView.findViewById(R.id.tv_timePost);
@@ -40,20 +49,57 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
     }
 
     public ResultAdapter(List<Result> resultList) {
-        mResultList = resultList;
+        this.resultList = resultList;
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.result_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+
+        final ViewHolder holder = new ViewHolder(view);
+
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = holder.getAdapterPosition();
+                Result result = resultList.get(position);
+//                holder.view.setBackgroundColor(Color.GRAY);
+                openWebPage(result.getWebpageURL());
+            }
+        });
+        holder.tv_title.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = holder.getAdapterPosition();
+                Result result = resultList.get(position);
+                openWebPage(result.getWebpageURL());
+
+            }
+        });
+        holder.tv_description.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = holder.getAdapterPosition();
+                Result result = resultList.get(position);
+                openWebPage(result.getWebpageURL());
+            }
+        });
+        holder.tv_webpageURL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int position = holder.getAdapterPosition();
+                Result result = resultList.get(position);
+                openWebPage(result.getWebpageURL());
+            }
+        });
+        return holder;
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Result result = mResultList.get(position);
+        Result result = resultList.get(position);
         holder.tv_title.setText(result.getName() + "-" + result.getAuthor());
+        holder.tv_title.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         holder.model_image.setImageResource(R.drawable.ying_ting);
         holder.tv_description.setText(result.getDescription());
         holder.tv_timePost.setText(result.getTimePost());
@@ -62,6 +108,16 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
     @Override
     public int getItemCount() {
-        return mResultList.size();
+        return resultList.size();
+    }
+
+    /**
+     * 打开网页
+     *
+     * @param url 网页地址
+     */
+    public void openWebPage(String url) {
+        //TODO
+        Logger.d("URL", url);
     }
 }

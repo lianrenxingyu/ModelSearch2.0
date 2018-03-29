@@ -9,7 +9,7 @@ import com.chenggong.modelsearch.BuildConfig;
  * Created by chenggong on 18-3-28.
  */
 
-public class Logger {
+public final class Logger {
     public static void v(String tag, String msg) {
         if (BuildConfig.DEBUG) {
             Log.v(tag, msg);
