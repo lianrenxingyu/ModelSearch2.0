@@ -10,11 +10,10 @@
         android:id="@+id/tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
         android:layout_marginTop="5dp"
+        android:maxLines="2"
         android:text="物品-作者-网站"
-        android:textSize="16sp"
+        android:textSize="17sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <!--模型图片-->
@@ -31,13 +30,13 @@
     <TextView
         android:id="@+id/tv_description"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginLeft="10dp"
         android:layout_marginRight="8dp"
-        android:layout_marginStart="16dp"
-        android:ellipsize="none"
-        android:inputType="textMultiLine"
+        android:layout_marginStart="10dp"
+        android:ellipsize="end"
+        android:maxLines="4"
         android:text="这里是一个物品的描述"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.157"
@@ -48,13 +47,13 @@
     ellipsize 需要配合 maxlines 来使用才能展现出省略号-->
     <TextView
         android:id="@+id/tv_webpageURL"
-        android:layout_width="170dp"
+        android:layout_width="160dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:text="http://www.baidu.com"
-        app:layout_constraintBottom_toTopOf="@id/view"
+        app:layout_constraintBottom_toTopOf="@id/divideView"
         app:layout_constraintStart_toStartOf="@id/tv_description" />
 
     <TextView
@@ -62,17 +61,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-
+        android:layout_marginRight="5dp"
         android:text="2017-01-01"
-        app:layout_constraintBottom_toTopOf="@id/view"
+        app:layout_constraintBottom_toTopOf="@id/divideView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.776"
         app:layout_constraintStart_toEndOf="@id/tv_webpageURL" />
 
     <View
-        android:id="@+id/view"
+        android:id="@+id/divideView"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:layout_marginTop="5dp"

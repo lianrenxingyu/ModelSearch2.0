@@ -98,7 +98,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Result result = resultList.get(position);
-        holder.tv_title.setText(result.getName() + "-" + result.getAuthor());
+        holder.tv_title.setText(result.getName() + "-" + result.getAuthor()+"-"+result.getSource());
         holder.tv_title.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
         holder.model_image.setImageResource(R.drawable.ying_ting);
         holder.tv_description.setText(result.getDescription());

@@ -1,5 +1,7 @@
 package com.chenggong.modelsearch.bean;
 
+import java.util.List;
+
 /**
  * Created by chenggong on 18-3-27.
  */
@@ -16,11 +18,21 @@ public class Result {
     private String webpageURL;  //模型web网页网址
     private String source;  //网站网址
 
-    private String imgWebURL;   //
+    private List<String> imgWebURL;   //
     private String browseNum;   //
     private String label;   //
     private String summary; //
     private String flag;   //
+    private String number;
+
+    public String getNumber() {
+        return number;
+    }
+
+    public void setNumber(String number) {
+        this.number = number;
+    }
+
     private String version; // 版本
 
     public Result() {
@@ -82,11 +94,11 @@ public class Result {
         this.source = source;
     }
 
-    public String getImgWebURL() {
+    public List<String> getImgWebURL() {
         return imgWebURL;
     }
 
-    public void setImgWebURL(String imgWebURL) {
+    public void setImgWebURL(List<String> imgWebURL) {
         this.imgWebURL = imgWebURL;
     }
 

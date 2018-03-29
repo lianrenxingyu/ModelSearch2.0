@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -37,6 +38,7 @@ public class ResultActivity extends Activity implements View.OnClickListener {
     private EditText et_textSearch;
     private RecyclerView mRecyclerView;
     private List<Result> resultList;
+    private ResultAdapter resultAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +54,7 @@ public class ResultActivity extends Activity implements View.OnClickListener {
         mRecyclerView = findViewById(R.id.result_recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
-        ResultAdapter resultAdapter = new ResultAdapter(resultList);
+        resultAdapter = new ResultAdapter(resultList);
         mRecyclerView.setAdapter(resultAdapter);
 
     }
@@ -116,6 +118,17 @@ public class ResultActivity extends Activity implements View.OnClickListener {
                     public void onResponse(Call call, Response response) throws IOException {
                         String responseStr = response.body().string();
                         Logger.d(TAG, responseStr);
+                        List<Result> tempList = HttpUtil.handleResponse(responseStr);
+                        resultList.clear();
+                        for(Result result : tempList){
+                            resultList.add(result);
+                        }
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                resultAdapter.notifyDataSetChanged();
+                            }
+                        });
                     }
                 });
                 // TODO 完成搜索功能
