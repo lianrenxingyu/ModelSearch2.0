@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.ThemedSpinnerAdapter;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -14,9 +14,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.chenggong.modelsearch.R;
 import com.chenggong.modelsearch.adapter.ResultAdapter;
 import com.chenggong.modelsearch.bean.Result;
-import com.chenggong.modelsearch.R;
 import com.chenggong.modelsearch.bean.SearchReqBean;
 import com.chenggong.modelsearch.net.HttpUtil;
 import com.chenggong.modelsearch.utils.Configure;
@@ -31,7 +31,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 
-public class ResultActivity extends Activity implements View.OnClickListener {
+public class ResultActivity extends Activity implements View.OnTouchListener, View.OnClickListener {
 
     private static final String TAG = "ResultActivity";
     private Button btn_textSearch;
@@ -46,12 +46,14 @@ public class ResultActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_result);
         btn_textSearch = findViewById(R.id.btn_textSearch);
         et_textSearch = findViewById(R.id.et_textSearch);
+        mRecyclerView = findViewById(R.id.result_recyclerView);
+
         btn_textSearch.setOnClickListener(this);
+        mRecyclerView.setOnTouchListener(this);
 
         //初始化数据
         initData();
 
-        mRecyclerView = findViewById(R.id.result_recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
         resultAdapter = new ResultAdapter(this, resultList);
@@ -61,6 +63,7 @@ public class ResultActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
+        //通过监听焦点的活动情况，设置输入法的弹出关闭状态
         InputMethodManager methodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         if (hasFocus) {
             methodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
@@ -99,6 +102,7 @@ public class ResultActivity extends Activity implements View.OnClickListener {
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            //搜索功能
             case R.id.btn_textSearch:
                 SearchReqBean reqBean = new SearchReqBean(Configure.NAME_TYPE, et_textSearch.getText().toString());
                 String jsonStr = JSON.toJSONString(reqBean);
@@ -128,13 +132,40 @@ public class ResultActivity extends Activity implements View.OnClickListener {
                             @Override
                             public void run() {
                                 resultAdapter.notifyDataSetChanged();
+                                mRecyclerView.smoothScrollToPosition(0);
                             }
                         });
                     }
                 });
+                //关闭输入法
+                InputMethodManager methodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                methodManager.hideSoftInputFromWindow(et_textSearch.getWindowToken(), 0);
                 // TODO 完成搜索功能
                 break;
         }
     }
 
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        switch (v.getId()) {
+            case R.id.result_recyclerView:
+                float startY = 0;
+                float endY;
+                switch (event.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        startY = event.getY();
+                        break;
+                    case MotionEvent.ACTION_MOVE:
+                        endY = event.getY();
+                        if ((endY - startY) > 15) {
+                            //关闭输入法
+                            InputMethodManager methodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            methodManager.hideSoftInputFromWindow(et_textSearch.getWindowToken(), 0);
+                        }
+                        break;
+                }
+                break;
+        }
+        return false;
+    }
 }
