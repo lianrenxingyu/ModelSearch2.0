@@ -14,6 +14,7 @@
         android:maxLines="2"
         android:text="物品-作者-网站"
         android:textSize="17sp"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
     <!--模型图片-->

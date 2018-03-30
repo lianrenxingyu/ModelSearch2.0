@@ -106,7 +106,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
         holder.tv_title.setText(result.getName() + "-" + result.getAuthor()+"-"+result.getSource());
         holder.tv_title.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 
-        ImageUtil.loadImage(context,result.getImgWebURL().get(0),holder.model_image);
+        ImageUtil.loadImage(context,result.getImgURL(),holder.model_image);
 
         holder.tv_description.setText(result.getDescription());
         holder.tv_timePost.setText(result.getTimePost());

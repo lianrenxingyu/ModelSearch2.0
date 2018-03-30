@@ -18,12 +18,22 @@ public class Result {
     private String webpageURL;  //模型web网页网址
     private String source;  //网站网址
 
-    private List<String> imgWebURL;   //
+    private List<String> imgWebURL;   //网站上爬取的图片URL列表
     private String browseNum;   //
     private String label;   //
     private String summary; //
     private String flag;   //
     private String number;
+
+    private String imgURL;
+
+    public String getImgURL() {
+        return imgURL;
+    }
+
+    public void setImgURL(String imgURL) {
+        this.imgURL = imgURL;
+    }
 
     public String getNumber() {
         return number;

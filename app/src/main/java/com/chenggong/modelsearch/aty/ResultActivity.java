@@ -78,15 +78,13 @@ public class ResultActivity extends Activity implements View.OnClickListener {
     //初始化数据
     public void initData() {
         Result result = new Result();
-        List<String> imgUrlList = new ArrayList<>();
-        imgUrlList.add("http://www.dayin.la/attachment/thumb/2017-09/27/product_74818_800x600.jpg");
         result.setAuthor("作者");
         result.setDescription("这是一段简单的描述这是一段简单的描述这是一段简单的描述这是一段简单的描述这是一段简单的描述这是一段简单的描述");
         result.setSource("www.baidu.com");
         result.setTimePost("2017-01-01");
         result.setName("水壶");
         result.setWebpageURL("baidu.com/shuihu/101aaaaaaaaaaa");
-        result.setImgWebURL(imgUrlList);
+        result.setImgURL("http://www.dayin.la/attachment/thumb/2017-09/27/product_74818_800x600.jpg");
         resultList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             resultList.add(result);

@@ -56,10 +56,7 @@ public class HttpUtil {
             imgWebURLList = result.getImgWebURL();
             JSONObject jsonObject = JSON.parseObject(imgWebURLList.get(0));
             String imgURL = jsonObject.getString("imgURL");
-            imgWebURLList.clear();
-            imgWebURLList.add(imgURL);
-            resultList.get(i).setImgWebURL(imgWebURLList);
-
+            result.setImgURL(imgURL);
         }
         return resultList;
     }
