@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.chenggong.modelsearch.bean.Result;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.Callback;
@@ -43,11 +44,23 @@ public class HttpUtil {
      */
     public static List<Result> handleResponse(String responseStr) {
         List<Result> resultList;
-        Result result;
+        List<String> imgWebURLList;
         JSONObject dataObject = JSON.parseObject(responseStr);
         JSONArray dataArray = dataObject.getJSONArray("data");
         //TODO data中的很多数据并没有用，可以考虑过滤之类的操作
         resultList = JSON.parseArray(dataArray.toJSONString(), Result.class);
+
+        //获取imgWebURL列表的第一个URL
+        for (int i = 0;i<resultList.size();i++) {
+            Result result = resultList.get(i);
+            imgWebURLList = result.getImgWebURL();
+            JSONObject jsonObject = JSON.parseObject(imgWebURLList.get(0));
+            String imgURL = jsonObject.getString("imgURL");
+            imgWebURLList.clear();
+            imgWebURLList.add(imgURL);
+            resultList.get(i).setImgWebURL(imgWebURLList);
+
+        }
         return resultList;
     }
 

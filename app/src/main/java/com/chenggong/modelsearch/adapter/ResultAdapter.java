@@ -1,5 +1,6 @@
 package com.chenggong.modelsearch.adapter;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
@@ -11,6 +12,8 @@ import android.widget.TextView;
 
 import com.chenggong.modelsearch.bean.Result;
 import com.chenggong.modelsearch.R;
+import com.chenggong.modelsearch.net.HttpUtil;
+import com.chenggong.modelsearch.net.ImageUtil;
 import com.chenggong.modelsearch.utils.Logger;
 
 import java.util.List;
@@ -22,6 +25,7 @@ import java.util.List;
 
 public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder> {
 
+    private Context context;
     private static final String TAG = "ResultAdapter";
     private List<Result> resultList;
 
@@ -48,7 +52,8 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
     }
 
-    public ResultAdapter(List<Result> resultList) {
+    public ResultAdapter(Context context,List<Result> resultList) {
+        this.context = context;
         this.resultList = resultList;
     }
 
@@ -100,7 +105,9 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
         Result result = resultList.get(position);
         holder.tv_title.setText(result.getName() + "-" + result.getAuthor()+"-"+result.getSource());
         holder.tv_title.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
-        holder.model_image.setImageResource(R.drawable.ying_ting);
+
+        ImageUtil.loadImage(context,result.getImgWebURL().get(0),holder.model_image);
+
         holder.tv_description.setText(result.getDescription());
         holder.tv_timePost.setText(result.getTimePost());
         holder.tv_webpageURL.setText(result.getWebpageURL());

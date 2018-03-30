@@ -54,7 +54,7 @@ public class ResultActivity extends Activity implements View.OnClickListener {
         mRecyclerView = findViewById(R.id.result_recyclerView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
-        resultAdapter = new ResultAdapter(resultList);
+        resultAdapter = new ResultAdapter(this, resultList);
         mRecyclerView.setAdapter(resultAdapter);
 
     }
@@ -78,12 +78,15 @@ public class ResultActivity extends Activity implements View.OnClickListener {
     //初始化数据
     public void initData() {
         Result result = new Result();
+        List<String> imgUrlList = new ArrayList<>();
+        imgUrlList.add("http://www.dayin.la/attachment/thumb/2017-09/27/product_74818_800x600.jpg");
         result.setAuthor("作者");
         result.setDescription("这是一段简单的描述这是一段简单的描述这是一段简单的描述这是一段简单的描述这是一段简单的描述这是一段简单的描述");
         result.setSource("www.baidu.com");
         result.setTimePost("2017-01-01");
         result.setName("水壶");
         result.setWebpageURL("baidu.com/shuihu/101aaaaaaaaaaa");
+        result.setImgWebURL(imgUrlList);
         resultList = new ArrayList<>();
         for (int i = 0; i < 10; i++) {
             resultList.add(result);
@@ -120,7 +123,7 @@ public class ResultActivity extends Activity implements View.OnClickListener {
                         Logger.d(TAG, responseStr);
                         List<Result> tempList = HttpUtil.handleResponse(responseStr);
                         resultList.clear();
-                        for(Result result : tempList){
+                        for (Result result : tempList) {
                             resultList.add(result);
                         }
                         runOnUiThread(new Runnable() {
