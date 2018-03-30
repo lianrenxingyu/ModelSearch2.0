@@ -25,7 +25,7 @@ public class Result {
     private String flag;   //
     private String number;
 
-    private String imgURL;
+    private String imgURL;//作为搜索展示页面中的图片的url，实际是imgWebURL的list列表第一个URL
 
     public String getImgURL() {
         return imgURL;
