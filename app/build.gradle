@@ -26,7 +26,7 @@ dependencies {
     implementation 'com.alibaba:fastjson:1.1.68.android'
 
     //Glide 图片框架引用
-    implementation ("com.github.bumptech.glide:glide:4.6.1"){
+    implementation("com.github.bumptech.glide:glide:4.6.1") {
         exclude group: "com.android.support"        //防止引入不同的support支持版本库
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'

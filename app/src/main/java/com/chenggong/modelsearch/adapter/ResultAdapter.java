@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.chenggong.modelsearch.aty.WebPageActivity;
 import com.chenggong.modelsearch.bean.Result;
 import com.chenggong.modelsearch.R;
 import com.chenggong.modelsearch.net.HttpUtil;
@@ -52,7 +53,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
 
     }
 
-    public ResultAdapter(Context context,List<Result> resultList) {
+    public ResultAdapter(Context context, List<Result> resultList) {
         this.context = context;
         this.resultList = resultList;
     }
@@ -69,7 +70,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
                 int position = holder.getAdapterPosition();
                 Result result = resultList.get(position);
 //                holder.view.setBackgroundColor(Color.GRAY);
-                openWebPage(result.getWebpageURL());
+                WebPageActivity.start(context, result.getWebpageURL());
             }
         });
         holder.tv_title.setOnClickListener(new View.OnClickListener() {
@@ -77,8 +78,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 Result result = resultList.get(position);
-                openWebPage(result.getWebpageURL());
-
+                WebPageActivity.start(context, result.getWebpageURL());
             }
         });
         holder.tv_description.setOnClickListener(new View.OnClickListener() {
@@ -86,7 +86,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 Result result = resultList.get(position);
-                openWebPage(result.getWebpageURL());
+                WebPageActivity.start(context, result.getWebpageURL());
             }
         });
         holder.tv_webpageURL.setOnClickListener(new View.OnClickListener() {
@@ -94,7 +94,7 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 Result result = resultList.get(position);
-                openWebPage(result.getWebpageURL());
+                WebPageActivity.start(context, result.getWebpageURL());
             }
         });
         return holder;
@@ -103,10 +103,10 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Result result = resultList.get(position);
-        holder.tv_title.setText(result.getName() + "-" + result.getAuthor()+"-"+result.getSource());
+        holder.tv_title.setText(result.getName() + "-" + result.getAuthor() + "-" + result.getSource());
         holder.tv_title.getPaint().setFlags(Paint.UNDERLINE_TEXT_FLAG);
 
-        ImageUtil.loadImage(context,result.getImgURL(),holder.model_image);
+        ImageUtil.loadImage(context, result.getImgURL(), holder.model_image);
 
         holder.tv_description.setText(result.getDescription());
         holder.tv_timePost.setText(result.getTimePost());
@@ -118,13 +118,4 @@ public class ResultAdapter extends RecyclerView.Adapter<ResultAdapter.ViewHolder
         return resultList.size();
     }
 
-    /**
-     * 打开网页
-     *
-     * @param url 网页地址
-     */
-    public void openWebPage(String url) {
-        //TODO
-        Logger.d("URL", url);
-    }
 }
