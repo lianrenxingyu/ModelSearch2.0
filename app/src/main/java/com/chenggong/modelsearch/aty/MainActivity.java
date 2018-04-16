@@ -2,16 +2,34 @@ package com.chenggong.modelsearch.aty;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.chenggong.modelsearch.R;
+import com.chenggong.modelsearch.bean.SearchReqBean;
+import com.chenggong.modelsearch.net.HttpUtil;
+import com.chenggong.modelsearch.utils.Configure;
+import com.chenggong.modelsearch.utils.Encode;
+import com.chenggong.modelsearch.utils.Logger;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
+    private static final String TAG = "MainActivity";
 
     private EditText et_textSearch;
     private ImageView iv_gallery;
@@ -55,11 +73,75 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.et_textSearch:
-                ResultActivity.start(MainActivity.this);
+                ResultActivity.start(MainActivity.this,null);
                 break;
             case R.id.iv_gallery:
-                //TODO 打开图库的操作
+
+                Toast.makeText(MainActivity.this, "从图库选择图片", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.setAction(Intent.ACTION_PICK);
+                startActivityForResult(Intent.createChooser(intent, "选择图片"), 1);
+
                 break;
         }
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1){
+            if (resultCode != RESULT_OK){
+                Toast.makeText(MainActivity.this, "选择图片出现错误", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Uri uri = data.getData();
+
+
+            /**
+             * 注意: 在系统版本5.0以上和5.0以下，从uri获取图片路径的方法不同，在5.0以上可以直接  {@link uri.getpath()}
+             */
+            String[] proj = {MediaStore.Images.Media.DATA};
+            //好像是android多媒体数据库的封装接口，具体的看Android文档
+            Cursor cursor = getContentResolver().query(uri, proj, null, null, null);
+            //获得用户选择的图片的索引值
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            //将光标移至开头 ，这个很重要，不小心很容易引起越界
+            cursor.moveToFirst();
+            //最后根据索引值获取图片路径   结果类似：/mnt/sdcard/DCIM/Camera/IMG_20151124_013332.jpg
+            String path = cursor.getString(column_index);
+
+
+            Logger.d(TAG,path);
+            Logger.d(TAG,uri.getPath());
+
+
+            ResultActivity.start(this,path);
+
+
+        }
+    }
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

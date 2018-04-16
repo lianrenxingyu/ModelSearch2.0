@@ -20,6 +20,7 @@ import com.chenggong.modelsearch.bean.Result;
 import com.chenggong.modelsearch.bean.SearchReqBean;
 import com.chenggong.modelsearch.net.HttpUtil;
 import com.chenggong.modelsearch.utils.Configure;
+import com.chenggong.modelsearch.utils.Encode;
 import com.chenggong.modelsearch.utils.Logger;
 
 import java.io.IOException;
@@ -40,6 +41,8 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
     private List<Result> resultList;
     private ResultAdapter resultAdapter;
 
+    private String path;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +61,9 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         mRecyclerView.setLayoutManager(layoutManager);
         resultAdapter = new ResultAdapter(this, resultList);
         mRecyclerView.setAdapter(resultAdapter);
+
+        path = getIntent().getStringExtra("path");
+        imageSearch("飞机", path);
 
     }
 
@@ -94,15 +100,20 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         }
     }
 
-    public static void start(Context context) {
+    /**
+     * @param context
+     * @param path    本地选取图片的路径
+     */
+    public static void start(Context context, String path) {
         Intent intent = new Intent(context, ResultActivity.class);
+        intent.putExtra("path", path);
         context.startActivity(intent);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            //搜索功能
+            //文字搜索功能
             case R.id.btn_textSearch:
                 SearchReqBean reqBean = new SearchReqBean(Configure.NAME_TYPE, et_textSearch.getText().toString());
                 String jsonStr = JSON.toJSONString(reqBean);
@@ -113,7 +124,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                Toast.makeText(ResultActivity.this, "出现错误", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(ResultActivity.this, "模型搜索出现错误", Toast.LENGTH_SHORT).show();
                             }
                         });
                         Logger.d(TAG, "响应出现错误");
@@ -143,6 +154,55 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
                 // TODO 完成搜索功能
                 break;
         }
+    }
+
+
+    /**
+     * 图片搜索
+     *
+     * @param name 图片的名称
+     * @param path 图片路径
+     */
+    private void imageSearch(String name, String path) {
+
+        //图片编码
+        String imageEncode = Encode.encodeFile(path);
+        Logger.d(TAG, imageEncode);
+
+        SearchReqBean reqBean = new SearchReqBean(Configure.IMAGE_TYPE, name, imageEncode);
+        String jsonStr = JSON.toJSONString(reqBean);
+        Logger.d(TAG, jsonStr);
+        HttpUtil.sendOkHttpRequest(Configure.IAMGE_UPLOAD_URL, jsonStr, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(ResultActivity.this, "图片搜索出现错误", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                Logger.d(TAG, "响应出现错误");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseStr = response.body().string();
+                Logger.d(TAG, responseStr);
+                List<Result> tempList = HttpUtil.handleResponse(responseStr);
+                resultList.clear();
+                for (Result result : tempList) {
+                    resultList.add(result);
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        resultAdapter.notifyDataSetChanged();
+                        mRecyclerView.smoothScrollToPosition(0);
+                    }
+                });
+
+            }
+        });
     }
 
     @Override
