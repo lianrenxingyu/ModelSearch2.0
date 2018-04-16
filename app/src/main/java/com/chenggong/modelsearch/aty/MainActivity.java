@@ -73,7 +73,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.et_textSearch:
-                ResultActivity.start(MainActivity.this,null);
+                ResultActivity.start(MainActivity.this);
                 break;
             case R.id.iv_gallery:
 
@@ -116,7 +116,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             Logger.d(TAG,uri.getPath());
 
 
-            ResultActivity.start(this,path);
+            ResultActivity.start(this,path,Configure.IMAGE_TYPE);
 
 
         }

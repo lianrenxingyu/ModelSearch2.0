@@ -41,7 +41,8 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
     private List<Result> resultList;
     private ResultAdapter resultAdapter;
 
-    private String path;
+    private String path;//图片路径
+    private String type;//搜索类型
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,11 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         mRecyclerView.setAdapter(resultAdapter);
 
         path = getIntent().getStringExtra("path");
-        imageSearch("飞机", path);
+        type = getIntent().getStringExtra("type");
+        if (type == Configure.IMAGE_TYPE && path != null) {
+            //TODO name字段的截取
+            imageSearch("飞机", path);
+        }
 
     }
 
@@ -101,12 +106,20 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
     }
 
     /**
+     * 文本搜索通过这个方法启动
+     */
+    public static void start(Context context) {
+        start(context, null, Configure.NAME_TYPE);
+    }
+
+    /**
      * @param context
      * @param path    本地选取图片的路径
      */
-    public static void start(Context context, String path) {
+    public static void start(Context context, String path, String type) {
         Intent intent = new Intent(context, ResultActivity.class);
         intent.putExtra("path", path);
+        intent.putExtra("type", type);
         context.startActivity(intent);
     }
 
@@ -115,39 +128,8 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         switch (v.getId()) {
             //文字搜索功能
             case R.id.btn_textSearch:
-                SearchReqBean reqBean = new SearchReqBean(Configure.NAME_TYPE, et_textSearch.getText().toString());
-                String jsonStr = JSON.toJSONString(reqBean);
-                Logger.d(TAG, jsonStr);
-                HttpUtil.sendOkHttpRequest(Configure.NAME_UPLOAD_URL, jsonStr, new Callback() {
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(ResultActivity.this, "模型搜索出现错误", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-                        Logger.d(TAG, "响应出现错误");
-                    }
+                textSearch(et_textSearch.getText().toString());
 
-                    @Override
-                    public void onResponse(Call call, Response response) throws IOException {
-                        String responseStr = response.body().string();
-                        Logger.d(TAG, responseStr);
-                        List<Result> tempList = HttpUtil.handleResponse(responseStr);
-                        resultList.clear();
-                        for (Result result : tempList) {
-                            resultList.add(result);
-                        }
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                resultAdapter.notifyDataSetChanged();
-                                mRecyclerView.smoothScrollToPosition(0);
-                            }
-                        });
-                    }
-                });
                 //关闭输入法
                 InputMethodManager methodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 methodManager.hideSoftInputFromWindow(et_textSearch.getWindowToken(), 0);
@@ -156,6 +138,46 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         }
     }
 
+    /**
+     * 通过模型名称搜索
+     *
+     * @param name 模型的名字
+     */
+    private void textSearch(String name) {
+        SearchReqBean reqBean = new SearchReqBean(Configure.NAME_TYPE, name);
+        String jsonStr = JSON.toJSONString(reqBean);
+        Logger.d(TAG, jsonStr);
+        HttpUtil.sendOkHttpRequest(Configure.NAME_UPLOAD_URL, jsonStr, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(ResultActivity.this, "模型搜索出现错误", Toast.LENGTH_SHORT).show();
+                    }
+                });
+                Logger.d(TAG, "响应出现错误");
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseStr = response.body().string();
+                Logger.d(TAG, responseStr);
+                List<Result> tempList = HttpUtil.handleResponse(responseStr);
+                resultList.clear();
+                for (Result result : tempList) {
+                    resultList.add(result);
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        resultAdapter.notifyDataSetChanged();
+                        mRecyclerView.smoothScrollToPosition(0);
+                    }
+                });
+            }
+        });
+    }
 
     /**
      * 图片搜索
