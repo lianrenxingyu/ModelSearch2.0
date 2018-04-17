@@ -65,7 +65,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
 
         path = getIntent().getStringExtra("path");
         type = getIntent().getStringExtra("type");
-        if (type == Configure.IMAGE_TYPE && path != null) {
+        if (type.equals(Configure.IMAGE_TYPE) && path != null) {
             //TODO name字段的截取
             imageSearch("飞机", path);
         }
