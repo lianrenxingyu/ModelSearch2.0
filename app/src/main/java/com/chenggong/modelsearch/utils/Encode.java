@@ -49,6 +49,11 @@ public class Encode {
         return Base64.encodeToString(data, Base64.DEFAULT);
     }
 
+    /**
+     * 图片压缩,并写入数据流.采用了两种压缩方式,采样压缩和compress压缩,通过compress压缩获得了byte[] 数组
+     * @param path 图片在系统中的路径,还可以考虑通过uri获取图片
+     * @return 返回图片的字节数组
+     */
     private static byte[] compressPicture(String path) {
 
 
