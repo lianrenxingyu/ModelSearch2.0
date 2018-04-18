@@ -22,7 +22,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:hint="在3位到20位之间" />
+            android:hint="在3位到20位之间"
+            android:singleLine="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -41,9 +42,9 @@
             android:layout_height="wrap_content"
             android:layout_weight="3"
             android:ems="10"
-
             android:hint="请输入密码"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:singleLine="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -63,7 +64,8 @@
             android:layout_weight="3"
             android:ems="10"
             android:hint="再次输入密码"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:singleLine="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -81,7 +83,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:hint="输入邮箱地址" />
+            android:hint="输入邮箱地址"
+            android:singleLine="true" />
     </LinearLayout>
 
     <LinearLayout
@@ -99,7 +102,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:hint="公司名称" />
+            android:hint="公司名称"
+            android:singleLine="true" />
     </LinearLayout>
 
     <Button

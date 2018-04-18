@@ -20,7 +20,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/iv_login_logo"
         android:layout_marginTop="20dp"
-        android:hint="用户名" />
+        android:hint="用户名"
+        android:singleLine="true" />
 
     <EditText
         android:id="@+id/password"
@@ -30,7 +31,8 @@
         android:layout_marginTop="10dp"
         android:ems="10"
         android:hint="密码"
-        android:inputType="textPassword" />
+        android:inputType="textPassword"
+        android:singleLine="true" />
 
     <Button
         android:id="@+id/btn_login"
