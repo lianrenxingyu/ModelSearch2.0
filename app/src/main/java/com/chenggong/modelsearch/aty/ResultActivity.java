@@ -75,8 +75,9 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
 
         //对Record中的listview进行操作
 //        {"成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "哈哈哈"};
-        recordList = new ArrayList<>();
         sqlHandle = new RecordSQLHandle(this);
+        recordList = new ArrayList<>();
+        recordList.addAll(sqlHandle.getAllRecord());
         recordAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, recordList);
         lv_record.setAdapter(recordAdapter);
 
