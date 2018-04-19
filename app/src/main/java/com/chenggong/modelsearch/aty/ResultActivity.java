@@ -16,7 +16,9 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
@@ -46,6 +48,8 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
     private EditText et_textSearch;
     private RecyclerView mRecyclerView;
     private ListView lv_record;
+    private LinearLayout ll_record;
+    private TextView tv_deleteRecord;
 
     private List<String> recordList; //历史记录
     private List<Result> resultList = new ArrayList<>();//搜索出来的结果
@@ -65,9 +69,12 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         btn_textSearch = findViewById(R.id.btn_textSearch);
         et_textSearch = findViewById(R.id.et_textSearch);
         mRecyclerView = findViewById(R.id.result_recyclerView);
-        lv_record = findViewById(R.id.lv_record);
+        lv_record = findViewById(R.id.listview_record);
+        ll_record = findViewById(R.id.ll_record);
+        tv_deleteRecord = findViewById(R.id.tv_deleteRecord);
 
         btn_textSearch.setOnClickListener(this);
+        tv_deleteRecord.setOnClickListener(this);
         mRecyclerView.setOnTouchListener(this);
 
         //初始化数据
@@ -87,6 +94,8 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
                 //所以提前取出点击获得的变量名字
                 String name = recordList.get(position);
                 et_textSearch.setText(name);
+                et_textSearch.setCursorVisible(false);
+                ll_record.setVisibility(View.GONE);
                 textSearch(name);
             }
         });
@@ -95,13 +104,12 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         et_textSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                et_textSearch.setCursorVisible(true);
                 List<String> tempList = sqlHandle.getAllRecord();
                 recordList.clear();
                 recordList.addAll(tempList);
                 recordAdapter.notifyDataSetChanged();
-                mRecyclerView.setVisibility(View.GONE);
-                lv_record.setVisibility(View.VISIBLE);
+                showRecordView();
 
             }
         });
@@ -216,6 +224,12 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
                 textSearch(et_textSearch.getText().toString());
                 // TODO 完成搜索功能
                 break;
+            case R.id.tv_deleteRecord:
+                sqlHandle.clearData();
+                recordList.clear();
+                recordList.addAll(sqlHandle.getAllRecord());
+                recordAdapter.notifyDataSetChanged();
+                break;
         }
     }
 
@@ -266,8 +280,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
                         InputMethodManager methodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         methodManager.hideSoftInputFromWindow(et_textSearch.getWindowToken(), 0);
 
-                        lv_record.setVisibility(View.GONE);
-                        mRecyclerView.setVisibility(View.VISIBLE);
+                        hideRecordView();
                     }
                 });
             }
@@ -319,8 +332,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
                         InputMethodManager methodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                         methodManager.hideSoftInputFromWindow(et_textSearch.getWindowToken(), 0);
 
-                        lv_record.setVisibility(View.GONE);
-                        mRecyclerView.setVisibility(View.VISIBLE);
+                        hideRecordView();
                     }
                 });
 
@@ -330,11 +342,10 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && lv_record.getVisibility() == View.VISIBLE) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && ll_record.getVisibility() == View.VISIBLE) {
             //如果已经有搜索结果,则返回到搜索结果界面
             if (hasInit) {
-                lv_record.setVisibility(View.GONE);
-                mRecyclerView.setVisibility(View.VISIBLE);
+                hideRecordView();
                 return true;
             }
         }
@@ -345,6 +356,8 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
     public boolean onTouch(View v, MotionEvent event) {
         switch (v.getId()) {
             case R.id.result_recyclerView:
+
+            case R.id.listview_record:
                 float startY = 0;
                 float endY;
                 switch (event.getAction()) {
@@ -363,5 +376,22 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
                 break;
         }
         return false;
+    }
+
+
+    /**
+     * 隐藏历史记录
+     */
+    private void hideRecordView() {
+        ll_record.setVisibility(View.GONE);
+        mRecyclerView.setVisibility(View.VISIBLE);
+    }
+
+    /**
+     * 展示历史记录
+     */
+    private void showRecordView() {
+        mRecyclerView.setVisibility(View.GONE);
+        ll_record.setVisibility(View.VISIBLE);
     }
 }

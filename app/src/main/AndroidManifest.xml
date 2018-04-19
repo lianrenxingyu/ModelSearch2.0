@@ -23,7 +23,12 @@
         </activity>
         <activity android:name=".aty.LoginActivity" />
         <activity android:name=".aty.RegisterActivity" />
-        <activity android:name=".aty.ResultActivity" />
+        <!--windowSoftInputMode 属性设置,
+        adjustNothing:当输入法弹出的时候,空间布局不上移
+        stateVisible :弹出输入法键盘-->
+        <activity
+            android:name=".aty.ResultActivity"
+            android:windowSoftInputMode="adjustNothing|stateVisible" />
         <activity android:name=".aty.WebPageActivity"></activity>
     </application>
 
