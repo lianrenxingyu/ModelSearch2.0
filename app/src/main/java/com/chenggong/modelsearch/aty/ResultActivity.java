@@ -84,8 +84,11 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         lv_record.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                et_textSearch.setText(recordList.get(position));
-                textSearch(recordList.get(position));
+                //注意setText方法会调用 textChangeListener,在afterTextListener方法中导致RecordList变化
+                //所以提前取出点击获得的变量名字
+                String name = recordList.get(position);
+                et_textSearch.setText(name);
+                textSearch(name);
             }
         });
 
