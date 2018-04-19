@@ -27,9 +27,17 @@
             android:text="搜索" />
     </LinearLayout>
 
+    <View
+        android:id="@+id/divideView"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:layout_marginTop="3dp"
+        android:background="@color/lightGray" />
+
     <ListView
         android:id="@+id/lv_record"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"></ListView>
+
 
 </LinearLayout>

@@ -51,7 +51,7 @@ public class RecordSQLHandle {
     public List<String> getAllRecord() {
         List<String> recordList = new ArrayList<>();
         readDB = databaseHelper.getReadableDatabase();
-        Cursor cursor = readDB.query("record", null, null, null, null, null, null);
+        Cursor cursor = readDB.query("record", null, null, null, null, null, "id desc");
         while (cursor.moveToNext()) {
             String record = cursor.getString(cursor.getColumnIndex("name"));
             recordList.add(record);
@@ -64,15 +64,15 @@ public class RecordSQLHandle {
     /**
      * 模糊查询
      */
-    public List<String> querySimlar(String record) {
+    public List<String> querySimilar(String record) {
         //查询字符串
         String queryStr = "select * from record where name like '%" +
-                record + "%' order by id";
+                record + "%' order by id desc";
 
         readDB = databaseHelper.getReadableDatabase();
         List<String> simlarRecords = new ArrayList<>();
         Cursor cursor = readDB.rawQuery(queryStr, null);
-        while (cursor.moveToNext()){
+        while (cursor.moveToNext()) {
             simlarRecords.add(cursor.getString(cursor.getColumnIndex("name")));
         }
         cursor.close();

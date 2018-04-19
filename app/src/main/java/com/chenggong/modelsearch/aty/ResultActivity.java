@@ -50,7 +50,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
     private List<String> recordList; //历史记录
     private List<Result> resultList = new ArrayList<>();//搜索出来的结果
     private ResultAdapter resultAdapter;
-    ArrayAdapter<String> recordAdapter;
+    private ArrayAdapter<String> recordAdapter;
     private RecordSQLHandle sqlHandle;
 
     private boolean hasInit;//标志,mRecyclerView是否已经初始化,该标志用于在返回按钮时的判断
@@ -74,7 +74,6 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
 //        initData();
 
         //对Record中的listview进行操作
-//        {"成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "成功", "哈哈哈"};
         sqlHandle = new RecordSQLHandle(this);
         recordList = new ArrayList<>();
         recordList.addAll(sqlHandle.getAllRecord());
@@ -97,7 +96,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
             @Override
             public void onClick(View v) {
 
-                List<String> tempList= sqlHandle.getAllRecord();
+                List<String> tempList = sqlHandle.getAllRecord();
                 recordList.clear();
                 recordList.addAll(tempList);
                 recordAdapter.notifyDataSetChanged();
@@ -119,6 +118,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
             }
         });
 
+        //文本框的输入进行监听
         et_textSearch.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -134,7 +134,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
             public void afterTextChanged(Editable s) {
                 String name = et_textSearch.getText().toString().trim();
                 recordList.clear();
-                List<String> tempList = sqlHandle.querySimlar(name);
+                List<String> tempList = sqlHandle.querySimilar(name);
                 recordList.addAll(tempList);
                 recordAdapter.notifyDataSetChanged();
             }
@@ -255,6 +255,9 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (resultList.size() == 0) {
+                            Toast.makeText(ResultActivity.this, "什么都没有搜索到", Toast.LENGTH_LONG).show();
+                        }
                         resultAdapter.notifyDataSetChanged();
                         mRecyclerView.smoothScrollToPosition(0);
 
