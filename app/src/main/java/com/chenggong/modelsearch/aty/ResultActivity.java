@@ -16,8 +16,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,7 +48,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
     private EditText et_textSearch;
     private RecyclerView mRecyclerView;
     private ListView lv_record;
-    private LinearLayout ll_record;
+    private RelativeLayout relative_record;
     private TextView tv_deleteRecord;
 
     private List<String> recordList; //历史记录
@@ -70,7 +70,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         et_textSearch = findViewById(R.id.et_textSearch);
         mRecyclerView = findViewById(R.id.result_recyclerView);
         lv_record = findViewById(R.id.listview_record);
-        ll_record = findViewById(R.id.ll_record);
+        relative_record = findViewById(R.id.relative_record);
         tv_deleteRecord = findViewById(R.id.tv_deleteRecord);
 
         btn_textSearch.setOnClickListener(this);
@@ -95,7 +95,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
                 String name = recordList.get(position);
                 et_textSearch.setText(name);
                 et_textSearch.setCursorVisible(false);
-                ll_record.setVisibility(View.GONE);
+                relative_record.setVisibility(View.GONE);
                 textSearch(name);
             }
         });
@@ -342,7 +342,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && ll_record.getVisibility() == View.VISIBLE) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && relative_record.getVisibility() == View.VISIBLE) {
             //如果已经有搜索结果,则返回到搜索结果界面
             if (hasInit) {
                 hideRecordView();
@@ -383,7 +383,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
      * 隐藏历史记录
      */
     private void hideRecordView() {
-        ll_record.setVisibility(View.GONE);
+        relative_record.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
     }
 
@@ -392,6 +392,6 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
      */
     private void showRecordView() {
         mRecyclerView.setVisibility(View.GONE);
-        ll_record.setVisibility(View.VISIBLE);
+        relative_record.setVisibility(View.VISIBLE);
     }
 }

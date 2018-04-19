@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="2dp">
+    android:paddingBottom="12dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -26,7 +26,7 @@
         <Button
             android:id="@+id/btn_textSearch"
             android:layout_width="0dp"
-            android:layout_height="30dp"
+            android:layout_height="40dp"
             android:layout_weight="1"
             android:background="@color/lightBlue"
             android:padding="10dp"
@@ -40,8 +40,8 @@
     <!--android:layout_marginTop="3dp"-->
     <!--android:background="@color/lightGray" />-->
 
-    <LinearLayout
-        android:id="@+id/ll_record"
+    <RelativeLayout
+        android:id="@+id/relative_record"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -49,14 +49,13 @@
         <ListView
             android:id="@+id/listview_record"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"></ListView>
+            android:layout_height="wrap_content"></ListView>
 
         <TextView
             android:id="@+id/tv_deleteRecord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+            android:layout_alignParentBottom="true"
             android:background="@drawable/rect_border"
             android:paddingBottom="4dp"
             android:paddingLeft="16dp"
@@ -64,6 +63,6 @@
             android:text="清空历史记录"
             android:textColor="@color/Black"
             android:textSize="20sp" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>
