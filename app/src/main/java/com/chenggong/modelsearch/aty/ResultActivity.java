@@ -49,8 +49,8 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
     private static final String TAG = "ResultActivity";
     private Button btn_textSearch;
     private EditText et_textSearch;
-    private RecyclerView mRecyclerView;
-    private ListView lv_record;
+    private RecyclerView recycleView_result;
+    private ListView listView_record;
     private RelativeLayout relative_record;
     private TextView tv_deleteRecord;
     private LinearLayout linear_turn_page;
@@ -81,8 +81,8 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         setContentView(R.layout.activity_result);
         btn_textSearch = findViewById(R.id.btn_textSearch);
         et_textSearch = findViewById(R.id.et_textSearch);
-        mRecyclerView = findViewById(R.id.result_recyclerView);
-        lv_record = findViewById(R.id.listview_record);
+        recycleView_result = findViewById(R.id.result_recyclerView);
+        listView_record = findViewById(R.id.listview_record);
         relative_record = findViewById(R.id.relative_record);
         tv_deleteRecord = findViewById(R.id.tv_deleteRecord);
         linear_turn_page = findViewById(R.id.ll_turn_page);
@@ -92,7 +92,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
 
         btn_textSearch.setOnClickListener(this);
         tv_deleteRecord.setOnClickListener(this);
-        mRecyclerView.setOnTouchListener(this);
+        listView_record.setOnTouchListener(this);
         iv_next_page.setOnClickListener(this);
         iv_last_page.setOnClickListener(this);
 
@@ -103,10 +103,10 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         sqlHandle = new RecordSQLHandle(this);
         recordList = new ArrayList<>();
         recordList.addAll(sqlHandle.getAllRecord());
-        recordAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, recordList);
-        lv_record.setAdapter(recordAdapter);
+        recordAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, recordList);
+        listView_record.setAdapter(recordAdapter);
 
-        lv_record.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listView_record.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //注意setText方法会调用 textChangeListener,在afterTextListener方法中导致RecordList变化
@@ -167,11 +167,10 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
             }
         });
 
-
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
+        recycleView_result.setLayoutManager(layoutManager);
         resultAdapter = new ResultAdapter(this, resultList);
-        mRecyclerView.setAdapter(resultAdapter);
+        recycleView_result.setAdapter(resultAdapter);
 
         path = getIntent().getStringExtra("path");
         type = getIntent().getStringExtra("type");
@@ -392,7 +391,9 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
                             Toast.makeText(ResultActivity.this, "什么都没有搜索到", Toast.LENGTH_LONG).show();
                         }
                         resultAdapter.notifyDataSetChanged();
-                        mRecyclerView.scrollToPosition(0);
+                        recycleView_result.scrollToPosition(0);
+                        et_textSearch.setCursorVisible(false);
+
                         hasInit = true;
                         //关闭输入法
                         InputMethodManager methodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -422,8 +423,6 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         switch (v.getId()) {
-            case R.id.result_recyclerView:
-
             case R.id.listview_record:
                 float startY = 0;
                 float endY;
@@ -431,7 +430,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
                     case MotionEvent.ACTION_DOWN:
                         startY = event.getY();
                         break;
-                    case MotionEvent.ACTION_MOVE:
+                    case MotionEvent.ACTION_UP:
                         endY = event.getY();
                         if ((endY - startY) > 15) {
                             //关闭输入法
@@ -466,7 +465,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
      */
     private void hideRecordView() {
         relative_record.setVisibility(View.GONE);
-        mRecyclerView.setVisibility(View.VISIBLE);
+        recycleView_result.setVisibility(View.VISIBLE);
         linear_turn_page.setVisibility(View.VISIBLE);
     }
 
@@ -474,7 +473,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
      * 展示历史记录
      */
     private void showRecordView() {
-        mRecyclerView.setVisibility(View.GONE);
+        recycleView_result.setVisibility(View.GONE);
         linear_turn_page.setVisibility(View.GONE);
         relative_record.setVisibility(View.VISIBLE);
     }
