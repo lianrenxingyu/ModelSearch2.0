@@ -28,6 +28,7 @@
         stateVisible :弹出输入法键盘-->
         <activity
             android:name=".aty.ResultActivity"
+            android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustNothing|stateVisible" />
         <activity android:name=".aty.WebPageActivity"></activity>
     </application>
