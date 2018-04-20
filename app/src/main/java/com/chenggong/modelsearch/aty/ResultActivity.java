@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -50,6 +51,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
     private ListView lv_record;
     private RelativeLayout relative_record;
     private TextView tv_deleteRecord;
+    private LinearLayout linear_turn_page;
 
     private List<String> recordList; //历史记录
     private List<Result> resultList = new ArrayList<>();//搜索出来的结果
@@ -72,6 +74,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         lv_record = findViewById(R.id.listview_record);
         relative_record = findViewById(R.id.relative_record);
         tv_deleteRecord = findViewById(R.id.tv_deleteRecord);
+        linear_turn_page = findViewById(R.id.ll_turn_page);
 
         btn_textSearch.setOnClickListener(this);
         tv_deleteRecord.setOnClickListener(this);
@@ -385,6 +388,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
     private void hideRecordView() {
         relative_record.setVisibility(View.GONE);
         mRecyclerView.setVisibility(View.VISIBLE);
+        linear_turn_page.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -392,6 +396,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
      */
     private void showRecordView() {
         mRecyclerView.setVisibility(View.GONE);
+        linear_turn_page.setVisibility(View.GONE);
         relative_record.setVisibility(View.VISIBLE);
     }
 }

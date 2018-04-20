@@ -2,17 +2,53 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingRight="8dp"
+    android:orientation="vertical"
     android:paddingLeft="8dp"
-    android:paddingTop="16dp"
-    android:orientation="vertical">
+    android:paddingRight="8dp"
+    android:paddingTop="16dp">
 
     <include layout="@layout/search_view" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/result_recyclerView"
-        android:visibility="gone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/ll_turn_page"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:background="@color/lightGray"
+        android:padding="2dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/iv_last_page"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_last_page"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/tv_pagesNum"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="第1页"
+            android:textSize="30sp" />
+
+        <ImageView
+            android:id="@+id/iv_next_page"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:src="@drawable/ic_next_page" />
+    </LinearLayout>
 
 </LinearLayout>
