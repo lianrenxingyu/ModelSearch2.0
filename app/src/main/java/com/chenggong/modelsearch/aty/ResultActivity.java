@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -23,6 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.chenggong.modelsearch.R;
 import com.chenggong.modelsearch.adapter.ResultAdapter;
 import com.chenggong.modelsearch.bean.Result;
@@ -53,12 +55,21 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
     private TextView tv_deleteRecord;
     private LinearLayout linear_turn_page;
 
+    //翻页控件
+    private ImageView iv_next_page;
+    private ImageView iv_last_page;
+    private TextView tv_pagesNum;
+
     private List<String> recordList; //历史记录
     private List<Result> resultList = new ArrayList<>();//搜索出来的结果
     private ResultAdapter resultAdapter;
     private ArrayAdapter<String> recordAdapter;
     private RecordSQLHandle sqlHandle;
 
+    private String tempHashcode;
+    private String tempPagesNum;
+    private String tempType; //暂时记录本次搜索的类型
+    private String tempSearchName;//用于暂时存储搜索物体的名称,表示当前搜索的物体的名字
     private boolean hasInit;//标志,mRecyclerView是否已经初始化,该标志用于在返回按钮时的判断
 
     private String path;//图片路径
@@ -75,10 +86,15 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         relative_record = findViewById(R.id.relative_record);
         tv_deleteRecord = findViewById(R.id.tv_deleteRecord);
         linear_turn_page = findViewById(R.id.ll_turn_page);
+        iv_last_page = findViewById(R.id.iv_last_page);
+        iv_next_page = findViewById(R.id.iv_next_page);
+        tv_pagesNum = findViewById(R.id.tv_pagesNum);
 
         btn_textSearch.setOnClickListener(this);
         tv_deleteRecord.setOnClickListener(this);
         mRecyclerView.setOnTouchListener(this);
+        iv_next_page.setOnClickListener(this);
+        iv_last_page.setOnClickListener(this);
 
         //初始化数据
 //        initData();
@@ -233,7 +249,26 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
                 recordList.addAll(sqlHandle.getAllRecord());
                 recordAdapter.notifyDataSetChanged();
                 break;
+            case R.id.iv_next_page:
+                //todo 下一页功能
+                tempType = getReloadType(tempType);
+                tempPagesNum = String.valueOf(Integer.valueOf(tempPagesNum) + 1);//加1操作
+                turnPage(tempType, tempPagesNum, tempHashcode);
+                break;
+            case R.id.iv_last_page:
+                //todo 上一页
+                tempType = getReloadType(tempType);
+                tempPagesNum = String.valueOf(Integer.valueOf(tempPagesNum) - 1);//加1操作
+                turnPage(tempType, tempPagesNum, tempHashcode);
+                break;
         }
+    }
+
+    /**
+     * 默认搜索第一页
+     */
+    private void textSearch(String name) {
+        textSearch(name, String.valueOf(1));
     }
 
     /**
@@ -241,53 +276,21 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
      *
      * @param name 模型的名字
      */
-    private void textSearch(String name) {
+    private void textSearch(String name, String pagesNum) {
         if (name.trim().equals("")) {
             Toast.makeText(ResultActivity.this, "搜索内容不能为空", Toast.LENGTH_LONG).show();
             return;
         }
+        tempSearchName = name;
         sqlHandle.insert(name);// 插入历史记录数据库
-        SearchReqBean reqBean = new SearchReqBean(Configure.NAME_TYPE, name.trim());
-        String jsonStr = JSON.toJSONString(reqBean);
-        Logger.d(TAG, jsonStr);
-        HttpUtil.sendOkHttpRequest(Configure.NAME_UPLOAD_URL, jsonStr, new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Toast.makeText(ResultActivity.this, "模型搜索出现错误", Toast.LENGTH_SHORT).show();
-                    }
-                });
-                Logger.d(TAG, "响应出现错误");
-            }
+        search(Configure.NAME_TYPE, name.trim(), pagesNum, "", "", Configure.NAME_UPLOAD_URL);
+    }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                String responseStr = response.body().string();
-                Logger.d(TAG, responseStr);
-                List<Result> tempList = HttpUtil.handleResponse(responseStr);
-                resultList.clear();
-                resultList.addAll(tempList);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (resultList.size() == 0) {
-                            Toast.makeText(ResultActivity.this, "什么都没有搜索到", Toast.LENGTH_LONG).show();
-                        }
-                        resultAdapter.notifyDataSetChanged();
-                        mRecyclerView.smoothScrollToPosition(0);
-
-                        hasInit = true;
-                        //关闭输入法
-                        InputMethodManager methodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                        methodManager.hideSoftInputFromWindow(et_textSearch.getWindowToken(), 0);
-
-                        hideRecordView();
-                    }
-                });
-            }
-        });
+    /**
+     * 默认搜索第一页
+     */
+    private void imageSearch(String name, String path) {
+        imageSearch(name, path, String.valueOf(1));
     }
 
     /**
@@ -296,22 +299,77 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
      * @param name 图片的名称
      * @param path 图片路径
      */
-    private void imageSearch(String name, String path) {
+    private void imageSearch(String name, String path, String pagesNum) {
 
         //图片编码
         String imageEncode = Encode.encodeFile(path);
         Logger.d(TAG, imageEncode);
 
-        SearchReqBean reqBean = new SearchReqBean(Configure.IMAGE_TYPE, name, imageEncode);
+        search(Configure.IMAGE_TYPE, name, pagesNum, imageEncode, "", Configure.IAMGE_UPLOAD_URL);
+    }
+
+    /**
+     * 图片reload
+     *
+     * @param pagesNum
+     * @param hashcode
+     */
+    private void imageReload(String pagesNum, String hashcode) {
+        search(Configure.IMAGE_Reload_TYPE, "", pagesNum, "", hashcode, Configure.IAMGE_RELOAD_URL);
+    }
+
+    private void objReload() {
+        //TODO 三维物体reload
+    }
+
+
+    /**
+     * 翻页操作,reload操作
+     *
+     * @param type     搜索类型
+     * @param pagesNum 要要获得的页码
+     * @param hashcode
+     */
+    private void turnPage(String type, String pagesNum, String hashcode) {
+        //文字类型
+        if (type.equals(Configure.NAME_TYPE)) {
+            textSearch(et_textSearch.getText().toString(), pagesNum);
+        } else if (type.equals(Configure.IMAGE_Reload_TYPE)) {
+            imageReload(pagesNum, hashcode);
+        } else if (type.equals(Configure.OBJECT_Reload_TYPE)) {
+            //TODO 模型reload
+        }
+
+        tv_pagesNum.setText("第" + tempPagesNum + "页");
+        if (pagesNum.equals("1")) {
+            iv_last_page.setVisibility(View.INVISIBLE);
+        } else {
+            iv_last_page.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * 网络搜索操作的核心方法
+     *
+     * @param type     搜索四种类型
+     * @param fileName 文件名字
+     * @param pagesNum 请求的页码
+     * @param encoded  编码,指图片和三维模型
+     * @param hashcode hashcode,用于reload
+     * @param url      请求的网络地址
+     */
+    private void search(String type, String fileName, String pagesNum, String encoded, String hashcode, String url) {
+        tempType = type;
+        SearchReqBean reqBean = new SearchReqBean(type, fileName, pagesNum, encoded, hashcode);
         String jsonStr = JSON.toJSONString(reqBean);
         Logger.d(TAG, jsonStr);
-        HttpUtil.sendOkHttpRequest(Configure.IAMGE_UPLOAD_URL, jsonStr, new Callback() {
+        HttpUtil.sendOkHttpRequest(url, jsonStr, new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(ResultActivity.this, "图片搜索出现错误", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ResultActivity.this, "搜索出现错误", Toast.LENGTH_SHORT).show();
                     }
                 });
                 Logger.d(TAG, "响应出现错误");
@@ -321,15 +379,20 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
             public void onResponse(Call call, Response response) throws IOException {
                 String responseStr = response.body().string();
                 Logger.d(TAG, responseStr);
-                List<Result> tempList = HttpUtil.handleResponse(responseStr);
+                JSONObject dataObject = HttpUtil.preHandle(responseStr);
+                List<Result> tempList = HttpUtil.handleResponse(dataObject);
                 resultList.clear();
                 resultList.addAll(tempList);
+                tempHashcode = HttpUtil.getHashcode(dataObject);
+                tempPagesNum = HttpUtil.getPagesNum(dataObject);
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        if (resultList.size() == 0) {
+                            Toast.makeText(ResultActivity.this, "什么都没有搜索到", Toast.LENGTH_LONG).show();
+                        }
                         resultAdapter.notifyDataSetChanged();
-                        mRecyclerView.smoothScrollToPosition(0);
-
+                        mRecyclerView.scrollToPosition(0);
                         hasInit = true;
                         //关闭输入法
                         InputMethodManager methodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -348,6 +411,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         if (keyCode == KeyEvent.KEYCODE_BACK && relative_record.getVisibility() == View.VISIBLE) {
             //如果已经有搜索结果,则返回到搜索结果界面
             if (hasInit) {
+                et_textSearch.setText(tempSearchName);
                 hideRecordView();
                 return true;
             }
@@ -381,6 +445,21 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         return false;
     }
 
+    /**
+     * 通过判读当前搜索type获取reload的type类型
+     *
+     * @param type
+     */
+    private String getReloadType(String type) {
+
+        if (type.equals(Configure.IMAGE_TYPE)) {
+            return Configure.IMAGE_Reload_TYPE;
+        } else if (type.equals(Configure.OBJECT_TYPE)) {
+            return Configure.OBJECT_Reload_TYPE;
+        } else {
+            return type;
+        }
+    }
 
     /**
      * 隐藏历史记录

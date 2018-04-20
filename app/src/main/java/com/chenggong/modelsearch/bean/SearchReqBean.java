@@ -67,18 +67,22 @@ public class SearchReqBean {
     }
 
     public SearchReqBean(String type, String fileName) {
-        this(type, fileName, "", "1", "10", "");
+        this(type, fileName, "1", "", "", "15");
+    }
+    //名称搜索
+    public SearchReqBean(String type, String fileName, String pagesNum) {
+        this(type, fileName, pagesNum, "", "", "15");
+    }
+    //图片搜索
+    public SearchReqBean(String type, String fileName, String pagesNum,String encoded) {
+        this(type, fileName, pagesNum, encoded, "", "15");
+    }
+    //用于构造reload
+    public SearchReqBean(String type, String fileName, String pagesNum, String encoded, String hashcode ) {
+        this(type, fileName, pagesNum, encoded, hashcode, "15");
     }
 
-    public SearchReqBean(String type, String fileName, String encoded) {
-        this(type, fileName, encoded, "1", "10", "");
-    }
-
-    public SearchReqBean(String type, String fileName, String encoded, String hashcode) {
-        this(type, fileName, encoded, "1", "10", hashcode);
-    }
-
-    public SearchReqBean(String type, String fileName, String encoded, String pagesNum, String displayNum, String hashcode) {
+    public SearchReqBean(String type, String fileName, String pagesNum, String encoded, String hashcode,String displayNum ) {
         this.type = type;
         this.fileName = fileName;
         this.encoded = encoded;

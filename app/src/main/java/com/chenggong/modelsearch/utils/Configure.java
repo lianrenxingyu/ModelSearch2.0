@@ -16,6 +16,11 @@ public final class Configure {
     public final static String OBJECT_Reload_TYPE = "4";
 
     public final static String NAME_UPLOAD_URL = "http://39.106.1.76:8080/hawkeyeweb/nameUpload.model";
+
     public final static String IAMGE_UPLOAD_URL = "http://39.106.1.76:8080/hawkeyeweb/imgUpload.model";
+    public final static String IAMGE_RELOAD_URL = "http://39.106.1.76:8080/hawkeyeweb/imgReload.model";
+
+    public final static String OBJECT_UPLOAD_URL = "http://39.106.1.76:8080/hawkeyeweb/objUpload.model";
+    public final static String ObJECT_RELOAD_URL = "http://39.106.1.76:8080/hawkeyeweb/objReload.model";
 
 }

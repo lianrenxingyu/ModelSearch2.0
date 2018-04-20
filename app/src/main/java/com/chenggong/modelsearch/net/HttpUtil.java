@@ -3,6 +3,7 @@ package com.chenggong.modelsearch.net;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.parser.Feature;
 import com.chenggong.modelsearch.bean.Result;
 
 import java.util.ArrayList;
@@ -37,15 +38,21 @@ public class HttpUtil {
     }
 
     /**
-     * 处理响应的字符串数据,转化成为resultBean的格式
-     *
+     * 预处理,提高效率,减少重复解析
      * @param responseStr
      * @return
      */
-    public static List<Result> handleResponse(String responseStr) {
+    public static JSONObject preHandle(String responseStr){
+        return JSON.parseObject(responseStr);
+    }
+    /**
+     * 处理响应的字符串数据,转化成为resultBean的格式
+     * @param dataObject
+     * @return
+     */
+    public static List<Result> handleResponse(JSONObject dataObject) {
         List<Result> resultList;
         List<String> imgWebURLList;
-        JSONObject dataObject = JSON.parseObject(responseStr);
         JSONArray dataArray = dataObject.getJSONArray("data");
         //TODO data中的很多数据并没有用，可以考虑过滤之类的操作
         resultList = JSON.parseArray(dataArray.toJSONString(), Result.class);
@@ -59,6 +66,19 @@ public class HttpUtil {
             result.setImgURL(imgURL);
         }
         return resultList;
+    }
+
+    /**
+     * 返回页码
+     */
+    public static String getPagesNum(JSONObject dataObject){
+        return dataObject.getString("pagesNum");
+    }
+    /**
+     * 返回hashcode
+     */
+    public static  String getHashcode(JSONObject dataObject){
+        return dataObject.getString("hashcode");
     }
 
 }
