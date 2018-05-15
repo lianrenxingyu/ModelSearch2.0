@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch.bean;
+package com.chenggong.modelsearch2_0.bean;
 
 import java.util.List;
 

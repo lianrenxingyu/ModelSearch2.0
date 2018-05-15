@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch.aty;
+package com.chenggong.modelsearch2_0.aty;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,15 +25,16 @@ import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.chenggong.modelsearch.R;
-import com.chenggong.modelsearch.adapter.ResultAdapter;
-import com.chenggong.modelsearch.bean.Result;
-import com.chenggong.modelsearch.bean.SearchReqBean;
-import com.chenggong.modelsearch.db.RecordSQLHandle;
-import com.chenggong.modelsearch.net.HttpUtil;
-import com.chenggong.modelsearch.utils.Configure;
-import com.chenggong.modelsearch.utils.Encode;
-import com.chenggong.modelsearch.utils.Logger;
+import com.chenggong.modelsearch2_0.R;
+import com.chenggong.modelsearch2_0.adapter.DownloadAdapter;
+import com.chenggong.modelsearch2_0.adapter.ResultAdapter;
+import com.chenggong.modelsearch2_0.bean.Result;
+import com.chenggong.modelsearch2_0.bean.ResultBean;
+import com.chenggong.modelsearch2_0.bean.SearchReqBean;
+import com.chenggong.modelsearch2_0.db.RecordSQLHandle;
+import com.chenggong.modelsearch2_0.net.HttpUtil;
+import com.chenggong.modelsearch2_0.utils.Configure;
+import com.chenggong.modelsearch2_0.utils.Logger;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -66,6 +67,9 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
     private ArrayAdapter<String> recordAdapter;
     private RecordSQLHandle sqlHandle;
 
+    private DownloadAdapter downloadAdapter;
+    private ResultBean resultBean;
+
     private String tempHashcode;
     private String tempPagesNum;
     private String tempType; //暂时记录本次搜索的类型
@@ -85,16 +89,16 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         listView_record = findViewById(R.id.listview_record);
         relative_record = findViewById(R.id.relative_record);
         tv_deleteRecord = findViewById(R.id.tv_deleteRecord);
-        linear_turn_page = findViewById(R.id.ll_turn_page);
-        iv_last_page = findViewById(R.id.iv_last_page);
-        iv_next_page = findViewById(R.id.iv_next_page);
-        tv_pagesNum = findViewById(R.id.tv_pagesNum);
+//        linear_turn_page = findViewById(R.id.ll_turn_page);
+//        iv_last_page = findViewById(R.id.iv_last_page);
+//        iv_next_page = findViewById(R.id.iv_next_page);
+//        tv_pagesNum = findViewById(R.id.tv_pagesNum);
 
         btn_textSearch.setOnClickListener(this);
         tv_deleteRecord.setOnClickListener(this);
         listView_record.setOnTouchListener(this);
-        iv_next_page.setOnClickListener(this);
-        iv_last_page.setOnClickListener(this);
+//        iv_next_page.setOnClickListener(this);
+//        iv_last_page.setOnClickListener(this);
 
         //初始化数据
 //        initData();
@@ -115,7 +119,8 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
                 et_textSearch.setText(name);
                 et_textSearch.setCursorVisible(false);
                 relative_record.setVisibility(View.GONE);
-                textSearch(name);
+//                textSearch(name);
+                nameSearch(name);
             }
         });
 
@@ -169,35 +174,22 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recycleView_result.setLayoutManager(layoutManager);
-        resultAdapter = new ResultAdapter(this, resultList);
-        recycleView_result.setAdapter(resultAdapter);
+//        resultAdapter = new ResultAdapter(this, resultList);
 
         path = getIntent().getStringExtra("path");
         type = getIntent().getStringExtra("type");
 
         //判断类型
         if (type.equals(Configure.IMAGE_TYPE) && path != null) {
+
+            //关闭输入法
+            InputMethodManager methodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            methodManager.hideSoftInputFromWindow(et_textSearch.getWindowToken(), 0);
             //TODO name字段的截取
             imageSearch("飞机", path);
         }
 
     }
-
-//    @Override
-//    public void onWindowFocusChanged(boolean hasFocus) {
-//        //通过监听焦点的活动情况，设置输入法的弹出关闭状态
-//        InputMethodManager methodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-//        if (hasFocus && type.equals(Configure.NAME_TYPE)) {
-//            methodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-//            boolean isOpen = methodManager.isActive();
-//            if (!isOpen) {  //通过判断输入法弹出状态，如果关闭，则弹出输入法
-//                methodManager.showSoftInput(et_textSearch, InputMethodManager.SHOW_FORCED);
-//            }
-//            Logger.d(TAG, "执行");
-//        } else if (!hasFocus) {
-//            methodManager.hideSoftInputFromWindow(et_textSearch.getWindowToken(), 0);
-//        }
-//    }
 
 
     //初始化数据
@@ -239,8 +231,8 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         switch (v.getId()) {
             //文字搜索功能
             case R.id.btn_textSearch:
-                textSearch(et_textSearch.getText().toString());
-                // TODO 完成搜索功能
+//                textSearch(et_textSearch.getText().toString());
+                nameSearch(et_textSearch.getText().toString());
                 break;
             case R.id.tv_deleteRecord:
                 sqlHandle.clearData();
@@ -248,18 +240,18 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
                 recordList.addAll(sqlHandle.getAllRecord());
                 recordAdapter.notifyDataSetChanged();
                 break;
-            case R.id.iv_next_page:
-                //todo 下一页功能
-                tempType = getReloadType(tempType);
-                tempPagesNum = String.valueOf(Integer.valueOf(tempPagesNum) + 1);//加1操作
-                turnPage(tempType, tempPagesNum, tempHashcode);
-                break;
-            case R.id.iv_last_page:
-                //todo 上一页
-                tempType = getReloadType(tempType);
-                tempPagesNum = String.valueOf(Integer.valueOf(tempPagesNum) - 1);//加1操作
-                turnPage(tempType, tempPagesNum, tempHashcode);
-                break;
+//            case R.id.iv_next_page:
+//                //todo 下一页功能
+//                tempType = getReloadType(tempType);
+//                tempPagesNum = String.valueOf(Integer.valueOf(tempPagesNum) + 1);//加1操作
+//                turnPage(tempType, tempPagesNum, tempHashcode);
+//                break;
+//            case R.id.iv_last_page:
+//                //todo 上一页
+//                tempType = getReloadType(tempType);
+//                tempPagesNum = String.valueOf(Integer.valueOf(tempPagesNum) - 1);//加1操作
+//                turnPage(tempType, tempPagesNum, tempHashcode);
+//                break;
         }
     }
 
@@ -280,16 +272,61 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
             Toast.makeText(ResultActivity.this, "搜索内容不能为空", Toast.LENGTH_LONG).show();
             return;
         }
+        recycleView_result.setAdapter(resultAdapter);
         tempSearchName = name;
         sqlHandle.insert(name);// 插入历史记录数据库
         search(Configure.NAME_TYPE, name.trim(), pagesNum, "", "", Configure.NAME_UPLOAD_URL);
     }
 
+
     /**
-     * 默认搜索第一页
+     * 新版本,根据名字搜索
+     * 也成为关键词搜索,json的格式 {keyword: "电气", pageNum: "0", displayNum: "600"}
      */
-    private void imageSearch(String name, String path) {
-        imageSearch(name, path, String.valueOf(1));
+
+    private void nameSearch(String name) {
+        sqlHandle.insert(name);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("keyword", name);
+        jsonObject.put("pageNum", 0);
+        jsonObject.put("displayNum", 600);
+
+        String jsonStr = JSON.toJSONString(jsonObject);
+        HttpUtil.sendOkHttpRequest(Configure.NAME_SEARCH_URL, jsonStr, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseStr = response.body().string();
+                Logger.d(TAG, responseStr);
+                resultBean = JSON.parseObject(responseStr, ResultBean.class);
+                downloadAdapter = new DownloadAdapter(ResultActivity.this, resultBean);
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (resultBean.getObjs().size() == 0) {
+                            Toast.makeText(ResultActivity.this, "没有查询到模型", Toast.LENGTH_SHORT).show();
+                        }
+                        recycleView_result.setAdapter(downloadAdapter);
+
+                        recycleView_result.scrollToPosition(0);
+                        et_textSearch.setCursorVisible(false);
+                        hideRecordView();
+                        //关闭输入法
+                        InputMethodManager methodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        methodManager.hideSoftInputFromWindow(et_textSearch.getWindowToken(), 0);
+
+                        hasInit = true;
+                    }
+                });
+            }
+        });
+
+
     }
 
     /**
@@ -298,27 +335,40 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
      * @param name 图片的名称
      * @param path 图片路径
      */
-    private void imageSearch(String name, String path, String pagesNum) {
+    private void imageSearch(String name, String path) {
+        HttpUtil.sendMultipartRequest(Configure.IMAGE_SEARCH_URL, path, new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
 
-        //图片编码
-        String imageEncode = Encode.encodeFile(path);
-        Logger.d(TAG, imageEncode);
+            }
 
-        search(Configure.IMAGE_TYPE, name, pagesNum, imageEncode, "", Configure.IAMGE_UPLOAD_URL);
-    }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseStr = response.body().string();
+                Logger.d(TAG, responseStr);
+                resultBean = JSON.parseObject(responseStr, ResultBean.class);
+                downloadAdapter = new DownloadAdapter(ResultActivity.this, resultBean);
 
-    /**
-     * 图片reload
-     *
-     * @param pagesNum
-     * @param hashcode
-     */
-    private void imageReload(String pagesNum, String hashcode) {
-        search(Configure.IMAGE_Reload_TYPE, "", pagesNum, "", hashcode, Configure.IAMGE_RELOAD_URL);
-    }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (resultBean.getObjs().size() == 0) {
+                            Toast.makeText(ResultActivity.this, "没有查询到模型", Toast.LENGTH_SHORT).show();
+                        }
+                        recycleView_result.setAdapter(downloadAdapter);
+                        recycleView_result.scrollToPosition(0);
+                        et_textSearch.setCursorVisible(false);
+                        hideRecordView();
+                        //关闭输入法
+                        InputMethodManager methodManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        methodManager.hideSoftInputFromWindow(et_textSearch.getWindowToken(), 0);
 
-    private void objReload() {
-        //TODO 三维物体reload
+                        hasInit = true;
+                    }
+                });
+            }
+        });
+
     }
 
 
@@ -333,12 +383,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
         //文字类型
         if (type.equals(Configure.NAME_TYPE)) {
             textSearch(et_textSearch.getText().toString(), pagesNum);
-        } else if (type.equals(Configure.IMAGE_Reload_TYPE)) {
-            imageReload(pagesNum, hashcode);
-        } else if (type.equals(Configure.OBJECT_Reload_TYPE)) {
-            //TODO 模型reload
         }
-
         tv_pagesNum.setText("第" + tempPagesNum + "页");
         if (pagesNum.equals("1")) {
             iv_last_page.setVisibility(View.INVISIBLE);
@@ -466,7 +511,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
     private void hideRecordView() {
         relative_record.setVisibility(View.GONE);
         recycleView_result.setVisibility(View.VISIBLE);
-        linear_turn_page.setVisibility(View.VISIBLE);
+//        linear_turn_page.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -474,7 +519,7 @@ public class ResultActivity extends Activity implements View.OnTouchListener, Vi
      */
     private void showRecordView() {
         recycleView_result.setVisibility(View.GONE);
-        linear_turn_page.setVisibility(View.GONE);
+//        linear_turn_page.setVisibility(View.GONE);
         relative_record.setVisibility(View.VISIBLE);
     }
 }

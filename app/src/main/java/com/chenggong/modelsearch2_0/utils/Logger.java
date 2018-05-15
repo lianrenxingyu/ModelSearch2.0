@@ -1,9 +1,9 @@
-package com.chenggong.modelsearch.utils;
+package com.chenggong.modelsearch2_0.utils;
 
 
 import android.util.Log;
 
-import com.chenggong.modelsearch.BuildConfig;
+import com.chenggong.modelsearch2_0.BuildConfig;
 
 /**
  * Created by chenggong on 18-3-28.

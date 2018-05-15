@@ -1,16 +1,15 @@
-package com.chenggong.modelsearch.aty;
+package com.chenggong.modelsearch2_0.aty;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.chenggong.modelsearch.R;
+import com.chenggong.modelsearch2_0.R;
 
 public class WebPageActivity extends Activity {
 

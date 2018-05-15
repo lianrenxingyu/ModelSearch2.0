@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch.utils;
+package com.chenggong.modelsearch2_0.utils;
 
 /**
  * Created by chenggong on 18-3-28.
@@ -17,8 +17,14 @@ public final class Configure {
 
     public final static String NAME_UPLOAD_URL = "http://39.106.1.76:8080/hawkeyeweb/nameUpload.model";
 
-    public final static String IAMGE_UPLOAD_URL = "http://39.106.1.76:8080/hawkeyeweb/imgUpload.model";
-    public final static String IAMGE_RELOAD_URL = "http://39.106.1.76:8080/hawkeyeweb/imgReload.model";
+
+
+
+
+    public final static String NAME_SEARCH_URL = "http://47.89.178.150/v3_2/text.model";//新版本搜索
+    public final static String IMAGE_SEARCH_URL = "http://47.89.178.150/v3_2/file/0/600/upload321.model";//新版本搜索
+
+
 
     public final static String OBJECT_UPLOAD_URL = "http://39.106.1.76:8080/hawkeyeweb/objUpload.model";
     public final static String ObJECT_RELOAD_URL = "http://39.106.1.76:8080/hawkeyeweb/objReload.model";

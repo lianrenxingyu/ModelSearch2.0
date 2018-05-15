@@ -1,7 +1,6 @@
-package com.chenggong.modelsearch.adapter;
+package com.chenggong.modelsearch2_0.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,12 +9,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.chenggong.modelsearch.aty.WebPageActivity;
-import com.chenggong.modelsearch.bean.Result;
-import com.chenggong.modelsearch.R;
-import com.chenggong.modelsearch.net.HttpUtil;
-import com.chenggong.modelsearch.net.ImageUtil;
-import com.chenggong.modelsearch.utils.Logger;
+import com.chenggong.modelsearch2_0.aty.WebPageActivity;
+import com.chenggong.modelsearch2_0.bean.Result;
+import com.chenggong.modelsearch2_0.R;
+import com.chenggong.modelsearch2_0.net.ImageUtil;
 
 import java.util.List;
 

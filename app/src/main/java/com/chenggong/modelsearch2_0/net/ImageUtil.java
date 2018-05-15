@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch.net;
+package com.chenggong.modelsearch2_0.net;
 
 import android.content.Context;
 import android.widget.ImageView;

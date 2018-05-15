@@ -1,16 +1,16 @@
-package com.chenggong.modelsearch.net;
+package com.chenggong.modelsearch2_0.net;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.parser.Feature;
-import com.chenggong.modelsearch.bean.Result;
+import com.chenggong.modelsearch2_0.bean.Result;
 
-import java.util.ArrayList;
+import java.io.File;
 import java.util.List;
 
 import okhttp3.Callback;
 import okhttp3.MediaType;
+import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
@@ -39,14 +39,17 @@ public class HttpUtil {
 
     /**
      * 预处理,提高效率,减少重复解析
+     *
      * @param responseStr
      * @return
      */
-    public static JSONObject preHandle(String responseStr){
+    public static JSONObject preHandle(String responseStr) {
         return JSON.parseObject(responseStr);
     }
+
     /**
      * 处理响应的字符串数据,转化成为resultBean的格式
+     *
      * @param dataObject
      * @return
      */
@@ -58,7 +61,7 @@ public class HttpUtil {
         resultList = JSON.parseArray(dataArray.toJSONString(), Result.class);
 
         //获取imgWebURL列表的第一个URL
-        for (int i = 0;i<resultList.size();i++) {
+        for (int i = 0; i < resultList.size(); i++) {
             Result result = resultList.get(i);
             imgWebURLList = result.getImgWebURL();
             JSONObject jsonObject = JSON.parseObject(imgWebURLList.get(0));
@@ -71,14 +74,45 @@ public class HttpUtil {
     /**
      * 返回页码
      */
-    public static String getPagesNum(JSONObject dataObject){
+    public static String getPagesNum(JSONObject dataObject) {
         return dataObject.getString("pagesNum");
     }
+
     /**
      * 返回hashcode
      */
-    public static  String getHashcode(JSONObject dataObject){
+    public static String getHashcode(JSONObject dataObject) {
         return dataObject.getString("hashcode");
     }
 
+
+    /**
+     * 图片和模型搜索的工具类
+     * @param url
+     * @param filePath
+     * @param callback
+     */
+    public static void sendMultipartRequest(String url, String filePath, Callback callback) {
+
+        File file = new File(filePath);
+        RequestBody fileBody = RequestBody.create(MediaType.parse("image/jpg"), file);
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .addFormDataPart("obj", "shuihu.jpg", fileBody)
+                .build();
+        OkHttpClient client = new OkHttpClient.Builder().build();
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("content-type", "multipart/form-data")
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(callback);
+
+    }
+
+    public static void downloadObject(String url, Callback callback){
+        Request request = new Request.Builder().url(url).build();
+        OkHttpClient client =new OkHttpClient();
+        client.newCall(request).enqueue(callback);
+    }
 }

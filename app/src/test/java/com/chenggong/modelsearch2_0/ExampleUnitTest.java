@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch;
+package com.chenggong.modelsearch2_0;
 
 import org.junit.Test;
 

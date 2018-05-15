@@ -1,11 +1,10 @@
-package com.chenggong.modelsearch.aty;
+package com.chenggong.modelsearch2_0.aty;
 
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -14,19 +13,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
-import com.chenggong.modelsearch.R;
-import com.chenggong.modelsearch.bean.SearchReqBean;
-import com.chenggong.modelsearch.net.HttpUtil;
-import com.chenggong.modelsearch.utils.Configure;
-import com.chenggong.modelsearch.utils.Encode;
-import com.chenggong.modelsearch.utils.Logger;
-
-import java.io.IOException;
-
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
+import com.chenggong.modelsearch2_0.R;
+import com.chenggong.modelsearch2_0.utils.Configure;
+import com.chenggong.modelsearch2_0.utils.Logger;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
     private static final String TAG = "MainActivity";

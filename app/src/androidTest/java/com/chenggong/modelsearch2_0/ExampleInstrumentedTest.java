@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch;
+package com.chenggong.modelsearch2_0;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

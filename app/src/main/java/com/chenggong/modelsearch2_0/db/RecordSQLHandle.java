@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch.db;
+package com.chenggong.modelsearch2_0.db;
 
 import android.content.ContentValues;
 import android.content.Context;

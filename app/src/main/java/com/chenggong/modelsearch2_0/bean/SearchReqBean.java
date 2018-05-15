@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch.bean;
+package com.chenggong.modelsearch2_0.bean;
 
 /**
  * Created by chenggong on 18-3-28.

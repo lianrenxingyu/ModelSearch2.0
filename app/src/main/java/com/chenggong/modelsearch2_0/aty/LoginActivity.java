@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch.aty;
+package com.chenggong.modelsearch2_0.aty;
 
 import android.content.Context;
 import android.content.Intent;
@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.chenggong.modelsearch.R;
+import com.chenggong.modelsearch2_0.R;
 
 public class LoginActivity extends BaseActivity implements View.OnClickListener {
 

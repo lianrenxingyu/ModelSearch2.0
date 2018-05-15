@@ -1,10 +1,10 @@
-package com.chenggong.modelsearch.db;
+package com.chenggong.modelsearch2_0.db;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import com.chenggong.modelsearch.utils.Logger;
+import com.chenggong.modelsearch2_0.utils.Logger;
 
 /**
  * Created by chenggong on 18-4-18.

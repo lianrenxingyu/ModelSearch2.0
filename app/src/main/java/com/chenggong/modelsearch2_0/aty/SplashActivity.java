@@ -1,4 +1,4 @@
-package com.chenggong.modelsearch.aty;
+package com.chenggong.modelsearch2_0.aty;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -9,7 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.chenggong.modelsearch.R;
+import com.chenggong.modelsearch2_0.R;
 
 public class SplashActivity extends Activity {
 
